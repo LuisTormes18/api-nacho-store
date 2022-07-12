@@ -1,0 +1,35 @@
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/work-schedules
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/work-schedules?page=1
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/branch-goods?category_id=3025&with=properties
+
+Categories	
+
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/categories/all
+
+Todos los productos de una categoria
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/branch-goods?category_id=3028&with=properties
+
+Login
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/send-login-code
+
+Register 
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/clients   {name: "petra juana", phone: "58123345676878", email: "pepito@pru.fom", account_id: 980,…}
+
+
+pedir los datos de una categoria
+https://api-dev.dondemand.io/api/v3/companies/119/categories/3028
+
+
+
+Url para buscar un producto
+https://api-dev.dondemand.io/api/v3/companies/119/branches/131/branch-goods/search?q=pijama
+
+
+propiedades de un producto
+https://api-dev.dondemand.io/api/v3/companies/119/branch-goods/231621/?with=properties
+
+Promise.all([
+    fetchData.get(`categories/${id}`),
+    fetchData.get(`branch-goods?category_id=${id}&with=properties`),
+  ]);
