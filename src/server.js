@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-
+const pino = require('express-pino-logger')();
 const fetchData = require("./axios");
 
 // Inicializar Expresss
@@ -12,18 +12,19 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 
 // logger
+app.use(pino)
 
 // middelwars
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/", express.static(path.join(__dirname) + "/public"));
+app.use("/", express.static(path.join(__dirname) + "/../public"));
 
 // Routes
 app.get("/api/categories/all/", async (req, res) => {
   const resp = await fetchData.get("branches/131/categories/all");
   const data = await resp.data;
 
-  res.json({ categories: data.data });
+  res.json({ ok: true, categories: data.data });
 });
 
 app.get("/api/categories/:idCategory", async (req, res) => {
@@ -34,50 +35,57 @@ app.get("/api/categories/:idCategory", async (req, res) => {
   const products = await resp.data;
   const categoryResp = await fetchData.get(`categories/${id}`);
 
-  res.json({ category: categoryResp.data, products: products.data });
+  res.json({ ok: true, category: categoryResp.data, products: products.data });
 });
-// Rutas de authenticacion
-app.post("/api/login", async (req, res) => {
+app.post("/api/auth/send-email", async (req, res) => {
   let body = req.body;
   // const resp = await fetchData.post("branches/131/send-login-code");
   // const data = await resp.data;
-  // console.log(body);
-  if (body.email === "myemail@hotmail.com") {
+  if (body.email === "mail@prueba.com") {
     return res.json({
-      user: {
-        id: "12345",
-        email: "myemail@hotmail.com",
-        name: "petra juana",
-        phone: "58123345676878",
-      },
+      ok: true,
+      message: "Login successfull",
+      existEmail: true,
     });
   }
-  res.json({ user: null });
-});
-app.post("/api/register", async (req, res) => {
-  const body = req.body;
-  // const resp = await fetchData.post("branches/131/clients");
-  // const data = await resp.data;
   res.json({
+    ok: true,
+    message: "no existe un usuario con ese email",
+    existEmail: false,
+  });
+});
+app.post("/api/auth/send-code-login", async (req, res) => {
+  let body = req.body;
+  // const resp = await fetchData.post("branches/131/send-login-code");
+  // const data = await resp.data;
+  console.log(body);
+  return res.json({
+    ok:true,
     user: {
       id: "12345",
-      email: body.email || "mailprueba@hotmail.com",
-      name: body.name || "nombre prueba",
-      phone: body.phone || "04123456789",
+      email: "myemail@hotmail.com",
+      name: "Prueba juana",
+      phone: "041292345678",
     },
   });
 });
+app.post("/api/auth/register", async (req, res) => {
+  const body = req.body;
+  // const resp = await fetchData.post("branches/131/clients");
+  // const data = await resp.data;
+  res.json({ ok: true, message: "user register successfull" });
+});
+
 app.get("/api/horarios", async (req, res) => {
   const resp = await fetchData.get(`branches/131/work-schedules`);
   const data = await resp.data;
   res.json({ horarios: data.data });
 });
+
 app.get("/api/search-product/", async (req, res) => {
   const { q } = req.query;
-  console.log(q);
   const resp = await fetchData.get(`branches/131/branch-goods/search?q=${q}`);
   const data = await resp.data;
-
   res.json({ result: data });
 });
 // Run server
