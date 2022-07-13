@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-const pino = require('express-pino-logger')();
+const pino = require("express-pino-logger")();
 const fetchData = require("./axios");
 
 // Inicializar Expresss
@@ -12,7 +12,7 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 
 // logger
-app.use(pino)
+app.use(pino);
 
 // middelwars
 app.use(express.json());
@@ -60,7 +60,7 @@ app.post("/api/auth/send-code-login", async (req, res) => {
   // const data = await resp.data;
   console.log(body);
   return res.json({
-    ok:true,
+    ok: true,
     user: {
       id: "12345",
       email: "myemail@hotmail.com",
