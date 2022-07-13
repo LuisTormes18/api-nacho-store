@@ -23,7 +23,7 @@ app.use(pino);
 // middelwars
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/", express.static(path.join(__dirname) + "/../public"));
+// app.use("/", express.static(path.join(__dirname) + "/../public"));
 
 // Routes
 app.get("/api", async (req, res) => {
