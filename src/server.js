@@ -20,6 +20,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/", express.static(path.join(__dirname) + "/../public"));
 
 // Routes
+app.get("/api", async (req, res) => {
+  res.json({ ok: true, message:"Api nacho store" });
+});
 app.get("/api/categories/all/", async (req, res) => {
   const resp = await fetchData.get("branches/131/categories/all");
   const data = await resp.data;
