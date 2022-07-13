@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const cors = require("cors");
 const pino = require("express-pino-logger")();
-const fetchData = require("./axios");
+const fetchData = require("./src/axios");
 
 // Inicializar Expresss
 const app = express();
@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // app.use("/", express.static(path.join(__dirname) + "/../public"));
 
 // Routes
-app.get("/api", async (req, res) => {
+app.get("/", async (req, res) => {
   res.json({ ok: true, message:"Api nacho store" });
 });
 app.get("/api/categories/all/", async (req, res) => {
