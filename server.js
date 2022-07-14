@@ -59,7 +59,6 @@ app.post("/api/auth/send-code-login", async (req, res) => {
   let body = req.body;
   // const resp = await fetchData.post("branches/131/send-login-code");
   // const data = await resp.data;
-  console.log(body);
   return res.json({
     ok: true,
     user: {
