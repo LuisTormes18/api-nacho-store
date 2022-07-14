@@ -1,34 +1,26 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-const pino = require("express-pino-logger")();
-const fetchData = require("./src/axios");
+const logger = require("morgan");
 
 // Inicializar Expresss
 const app = express();
 const port = process.env.PORT || 4000;
 
 // cors
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin,   X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request- Method');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT,  DELETE');
-  res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
-});
+app.use(cors());
 
-// logger
-app.use(pino);
+// Logger
+app.use(logger("dev"));
 
 // middelwars
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use("/", express.static(path.join(__dirname) + "/../public"));
+// app.use("/", express.static(path.join(__dirname) + "/public"));
 
 // Routes
-app.get("/", async (req, res) => {
-  res.json({ ok: true, message:"Api nacho store" });
-});
+const fetchData = require("./src/axios");
+
 app.get("/api/categories/all/", async (req, res) => {
   const resp = await fetchData.get("branches/131/categories/all");
   const data = await resp.data;
@@ -100,6 +92,9 @@ app.get("/api/search-product/", async (req, res) => {
 // Run server
 app.listen(port, () => {
   console.log("Server Runing on port " + port);
+});
+app.get("*", (req, res) => {
+  res.send({ ok:true, message: "WellCome To Api desde heroku!" });
 });
 
 module.exports = app;
