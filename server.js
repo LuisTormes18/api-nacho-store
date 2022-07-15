@@ -22,22 +22,42 @@ app.use(express.urlencoded({ extended: true }));
 const fetchData = require("./src/axios");
 
 app.get("/api/categories/all/", async (req, res) => {
-  const resp = await fetchData.get("branches/131/categories/all");
-  const data = await resp.data;
-
-  res.json({ ok: true, categories: data.data });
+  fetchData
+    .get("branches/131/categories/all")
+    .then((resp) => {
+      const data = resp.data;
+      return res.json({ ok: true, categories: data.data });
+    })
+    .catch((err) => {
+      console.log("error");
+      return res.json({ ok: false, categories: [] });
+    });
 });
 
 app.get("/api/categories/:idCategory", async (req, res) => {
   let id = req.params.idCategory;
-  const resp = await fetchData.get(
+
+  const getProducts = fetchData.get(
     `branches/131/branch-goods?category_id=${id}&with=properties`
   );
-  const products = await resp.data;
-  const categoryResp = await fetchData.get(`categories/${id}`);
+  const getCategory = fetchData.get(`categories/${id}`);
 
-  res.json({ ok: true, category: categoryResp.data, products: products.data });
+  Promise.all([getProducts, getCategory])
+    .then((resp) => {
+      const [categoryResp, productsResp] = resp;
+
+      return res.json({
+        ok: true,
+        category: categoryResp.data,
+        products: productsResp.data.data,
+      });
+    })
+    .catch((err) => {
+      console.log("error");
+      return res.json({ ok: false, category: null, products: [] });
+    });
 });
+
 app.post("/api/auth/send-email", async (req, res) => {
   let body = req.body;
   // const resp = await fetchData.post("branches/131/send-login-code");
@@ -77,23 +97,37 @@ app.post("/api/auth/register", async (req, res) => {
 });
 
 app.get("/api/horarios", async (req, res) => {
-  const resp = await fetchData.get(`branches/131/work-schedules`);
-  const data = await resp.data;
-  res.json({ horarios: data.data });
+  fetchData
+    .get(`branches/131/work-schedules`)
+    .then((resp) => {
+      const data = resp.data;
+      return res.json({ horarios: data.data });
+    })
+    .catch((err) => {
+      console.log("error");
+      return res.json({ ok: false, horarios: null });
+    });
 });
 
 app.get("/api/search-product/", async (req, res) => {
   const { q } = req.query;
-  const resp = await fetchData.get(`branches/131/branch-goods/search?q=${q}`);
-  const data = await resp.data;
-  res.json({ result: data });
+  fetchData
+    .get(`branches/131/branch-goods/search?q=${q}`)
+    .then((resp) => {
+      const data = resp.data;
+      res.json({ ok: true, result: data });
+    })
+    .catch((err) => {
+      console.log("error");
+      return res.json({ ok: false, result: null });
+    });
 });
 // Run server
 app.listen(port, () => {
   console.log("Server Runing on port " + port);
 });
 app.get("*", (req, res) => {
-  res.send({ ok:true, message: "WellCome To Api desde heroku!" });
+  res.send({ ok: true, message: "WellCome To Api desde heroku!" });
 });
 
 module.exports = app;
