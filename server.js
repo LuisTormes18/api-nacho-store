@@ -115,19 +115,20 @@ app.get("/api/search-product/", async (req, res) => {
     .get(`branches/131/branch-goods/search?q=${q}`)
     .then((resp) => {
       const data = resp.data;
-      res.json({ ok: true, result: data });
+      return res.json({ ok: true, result: data });
     })
     .catch((err) => {
       console.log("error");
       return res.json({ ok: false, result: null });
     });
 });
+app.get("*", (req, res) => {
+  res.send({ ok: true, message: "WellCome To Api desde heroku!" });
+});
+
 // Run server
 app.listen(port, () => {
   console.log("Server Runing on port " + port);
-});
-app.get("*", (req, res) => {
-  res.send({ ok: true, message: "WellCome To Api desde heroku!" });
 });
 
 module.exports = app;
