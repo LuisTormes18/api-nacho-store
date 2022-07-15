@@ -42,7 +42,7 @@ app.get("/api/categories/:idCategory", async (req, res) => {
   );
   const getCategory = fetchData.get(`categories/${id}`);
 
-  Promise.all([getProducts, getCategory])
+  Promise.all([getCategory, getProducts])
     .then((resp) => {
       const [categoryResp, productsResp] = resp;
 
